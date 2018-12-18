@@ -3,36 +3,35 @@ package pl.dopierala.hibernatedemo1;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import pl.dopierala.hibernatedemo1.entity.Employee;
 
-import java.io.Serializable;
+import java.util.List;
 
-public class SaveEntityApp {
+public class GetAllEntities {
     public static void main(String[] args) {
         //tworzenie obiektu configuration
         Configuration cfg = new Configuration();
         //wczytanie pliku koknfiguracyjnego
         cfg.configure("hibernate.cfg.xml");
         //wczytanie adnotacji
-        cfg.addAnnotatedClass(Employee.class);
+        cfg.addAnnotatedClass(Employee .class);
         //stworzenie obiektu Session Factory
         SessionFactory sessionFactory = cfg.buildSessionFactory();
         //pobieranie sesji
         Session currentSession = sessionFactory.getCurrentSession();
-        //storzenie obiektu
-        Employee emp = new Employee();
-        emp.setFirstName("Tadeusz");
-        emp.setLastName("Wisniewski");
-        emp.setSalary(10000);
         //rozpoczecie tranzakcji
         currentSession.beginTransaction();
-        //zapisanie pracownika
-        Integer savedEntityId = (Integer) currentSession.save(emp);
+        //odczytanie pracownika
+        Query query = currentSession.createQuery("FROM Employee ORDER BY idEmployee DESC");
+        List employees = query.getResultList();
+        employees.stream().forEach(System.out::println);
+        //currentSession.save(emp);
         //zakonczenie transakcji
-        currentSession.getTransaction().commit();
+        currentSession.getTransaction().
+
+                commit();
         //zamkniecie obiektu Session Factory
         sessionFactory.close();
     }
-
-
 }

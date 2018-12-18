@@ -5,9 +5,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import pl.dopierala.hibernatedemo1.entity.Employee;
 
-import java.io.Serializable;
-
-public class SaveEntityApp {
+public class UpdateDetachedEntityApp {
     public static void main(String[] args) {
         //tworzenie obiektu configuration
         Configuration cfg = new Configuration();
@@ -19,20 +17,26 @@ public class SaveEntityApp {
         SessionFactory sessionFactory = cfg.buildSessionFactory();
         //pobieranie sesji
         Session currentSession = sessionFactory.getCurrentSession();
-        //storzenie obiektu
-        Employee emp = new Employee();
-        emp.setFirstName("Tadeusz");
-        emp.setLastName("Wisniewski");
-        emp.setSalary(10000);
         //rozpoczecie tranzakcji
         currentSession.beginTransaction();
-        //zapisanie pracownika
-        Integer savedEntityId = (Integer) currentSession.save(emp);
+        //update pracownika
+        Employee empToModify = currentSession.get(Employee.class,9);
+        System.out.println("Dane pobrane z bazy:");
+        System.out.println(empToModify);
         //zakonczenie transakcji
         currentSession.getTransaction().commit();
+
+        // Zmiana imienia po zakonczeniu transakcji
+        empToModify.setFirstName("Marcin");
+        System.out.println("Po zmianie imienia:");
+        System.out.println(empToModify);
+
+         currentSession = sessionFactory.getCurrentSession();
+         currentSession.beginTransaction();
+         currentSession.update(empToModify);
+         currentSession.getTransaction().commit();
+
         //zamkniecie obiektu Session Factory
         sessionFactory.close();
     }
-
-
 }
