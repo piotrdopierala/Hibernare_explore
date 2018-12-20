@@ -11,8 +11,6 @@
 		<property name="connection.username">skstudent</property>
 		<property name="connection.password">skstudent</property>
 
-
-
 		<property name="connection.pool_size">1</property>
 		<property name="show_sql">true</property>
 		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>

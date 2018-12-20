@@ -1,11 +1,14 @@
-package pl.dopierala.hibernatedemo1;
+package pl.dopierala.HQLtrain;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import pl.dopierala.hibernatedemo1.entity.Employee;
+import org.hibernate.query.Query;
+import pl.dopierala.HQLtrain.entity.Employee;
 
-public class SaveEntityApp {
+import java.util.List;
+
+public class WhereApp {
     public static void main(String[] args) {
         //tworzenie obiektu configuration
         Configuration cfg = new Configuration();
@@ -17,20 +20,18 @@ public class SaveEntityApp {
         SessionFactory sessionFactory = cfg.buildSessionFactory();
         //pobieranie sesji
         Session currentSession = sessionFactory.getCurrentSession();
-        //storzenie obiektu
-        Employee emp = new Employee();
-        emp.setFirstName("Tadeusz");
-        emp.setLastName("Wisniewski");
-        emp.setSalary(10000);
         //rozpoczecie tranzakcji
         currentSession.beginTransaction();
-        //zapisanie pracownika
-        Integer savedEntityId = (Integer) currentSession.save(emp);
+        //odczytanie pracownika
+        String fromHQL = "FROM Employee WHERE salary>:salary";
+        Query<Employee> query = currentSession.createQuery(fromHQL,Employee.class).setParameter("salary",9000);
+        List<Employee> resultList = query.getResultList();
+        for (Employee emp : resultList) {
+            System.out.println(emp.toString());
+        }
         //zakonczenie transakcji
         currentSession.getTransaction().commit();
         //zamkniecie obiektu Session Factory
         sessionFactory.close();
     }
-
-
 }

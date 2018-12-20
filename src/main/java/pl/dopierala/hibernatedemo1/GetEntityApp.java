@@ -3,10 +3,7 @@ package pl.dopierala.hibernatedemo1;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.query.Query;
 import pl.dopierala.hibernatedemo1.entity.Employee;
-
-import java.util.List;
 
 public class GetEntityApp {
     public static void main(String[] args) {
