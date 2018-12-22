@@ -13,6 +13,8 @@ public class CompanyDetail {
     private String residence;
     @Column(name="employee_number")
     private int employeeNumber;
+    @OneToOne(mappedBy = "details", cascade = CascadeType.ALL) //pole mapujace w tej drugiej klasie (Company)
+    private Company company;
 
     public CompanyDetail() {
     }
@@ -44,6 +46,14 @@ public class CompanyDetail {
 
     public void setEmployeeNumber(int employeeNumber) {
         this.employeeNumber = employeeNumber;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
     }
 
     @Override

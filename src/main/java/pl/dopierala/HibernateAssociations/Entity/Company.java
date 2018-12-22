@@ -14,7 +14,7 @@ public class Company {
     @Column(name="value")
     private Integer value;
 
-    @OneToOne(targetEntity = CompanyDetail.class)
+    @OneToOne(targetEntity = CompanyDetail.class, cascade = {CascadeType.REMOVE,CascadeType.PERSIST})
     @JoinColumn(name="id_company_detail")
     private CompanyDetail details;
 
