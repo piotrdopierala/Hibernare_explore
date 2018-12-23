@@ -1,15 +1,13 @@
-package pl.dopierala.HibernateAssociations;
+package pl.dopierala.HibernateAssociations.OneToMany;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.query.Query;
-import pl.dopierala.HibernateAssociations.Entity.Company;
-import pl.dopierala.HibernateAssociations.Entity.CompanyDetail;
+import pl.dopierala.HibernateAssociations.OneToMany.Entity.Company;
+import pl.dopierala.HibernateAssociations.OneToMany.Entity.CompanyDetail;
+import pl.dopierala.HibernateAssociations.OneToMany.Entity.Property;
 
-import java.util.List;
-
-public class OneToOneHQLapp {
+public class OneToManyGetApp {
     public static void main(String[] args) {
         //tworzenie obiektu configuration
         Configuration cfg = new Configuration();
@@ -18,6 +16,7 @@ public class OneToOneHQLapp {
         //wczytanie adnotacji
         cfg.addAnnotatedClass(Company.class);
         cfg.addAnnotatedClass(CompanyDetail.class);
+        cfg.addAnnotatedClass(Property.class);
         //stworzenie obiektu Session Factory
         SessionFactory sessionFactory = cfg.buildSessionFactory();
         //pobieranie sesji
@@ -26,18 +25,9 @@ public class OneToOneHQLapp {
         currentSession.beginTransaction();
         //odczytanie pracownika
         ////////////////////
-
-        String selectAllCompaniesSqlQuery = "SELECT c FROM Company AS c INNER JOIN c.details AS d ON c.details=d WHERE d.residence='Italy'";
-        String selectValuePolishCompaniesSqlQuery = "SELECT SUM(c.value) FROM Company AS c INNER JOIN c.details AS d WHERE d.residence='Poland'";
-        String select = "SELECT c.name FROM CompanyDetail d JOIN d.company c WHERE d.employeeNumber<35000 ORDER BY c.value";
-
-        Query query = currentSession.createQuery(select);
-        List resultList = query.getResultList();
-        //Object result = query.getSingleResult();
-
-        resultList.forEach(System.out::println);
-        //System.out.println(result);
-
+            Company company = currentSession.createQuery("FROM Company WHERE name='PDC'",Company.class).getSingleResult();
+        System.out.println(company);
+        System.out.println(company.getProperties());
         ////////////////////
         //zakonczenie transakcji
         currentSession.getTransaction().commit();

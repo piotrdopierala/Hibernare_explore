@@ -1,15 +1,15 @@
-package pl.dopierala.HibernateAssociations;
+package pl.dopierala.FetchTypes;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.query.Query;
-import pl.dopierala.HibernateAssociations.Entity.Company;
-import pl.dopierala.HibernateAssociations.Entity.CompanyDetail;
+import pl.dopierala.FetchTypes.Entity.Company;
+import pl.dopierala.FetchTypes.Entity.CompanyDetail;
+import pl.dopierala.FetchTypes.Entity.Property;
 
 import java.util.List;
 
-public class OneToOneApp {
+public class CloseSessionApp {
     public static void main(String[] args) {
         //tworzenie obiektu configuration
         Configuration cfg = new Configuration();
@@ -18,6 +18,7 @@ public class OneToOneApp {
         //wczytanie adnotacji
         cfg.addAnnotatedClass(Company.class);
         cfg.addAnnotatedClass(CompanyDetail.class);
+        cfg.addAnnotatedClass(Property.class);
         //stworzenie obiektu Session Factory
         SessionFactory sessionFactory = cfg.buildSessionFactory();
         //pobieranie sesji
@@ -26,16 +27,32 @@ public class OneToOneApp {
         currentSession.beginTransaction();
         //odczytanie pracownika
         ////////////////////
-            Company company = new Company("Oracle",90000000);
-            CompanyDetail companyDetail = new CompanyDetail("USA",550);
-            company.setDetails(companyDetail);
 
-            currentSession.persist(companyDetail);
-            currentSession.persist(company);
+        int id=31;
+
+        System.out.println("Pobieranie obiektu Company");
+        Company company = currentSession.get(Company.class, id);
+        System.out.println("Obiekt Company został pobrany");
+        System.out.println(company);
+
+
 
         ////////////////////
         //zakonczenie transakcji
         currentSession.getTransaction().commit();
+
+        Session session = sessionFactory.getCurrentSession();
+        ////////////////////
+        session.beginTransaction();
+        Company mergedCompany = (Company) session.merge(company);
+        ////////////////////
+        System.out.println("....");
+        System.out.println("Nieruchomosci:");
+        List<Property> properties = mergedCompany.getProperties();
+        properties.forEach(System.out::println);
+        ////////////////////
+        session.getTransaction().commit();
+        ////////////////////
         //zamkniecie obiektu Session Factory
         sessionFactory.close();
     }

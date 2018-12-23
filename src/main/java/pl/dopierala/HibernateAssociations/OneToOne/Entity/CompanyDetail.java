@@ -1,4 +1,4 @@
-package pl.dopierala.HibernateAssociations.Entity;
+package pl.dopierala.HibernateAssociations.OneToOne.Entity;
 
 import javax.persistence.*;
 

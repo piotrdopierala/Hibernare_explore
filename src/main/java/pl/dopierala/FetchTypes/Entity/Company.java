@@ -1,6 +1,9 @@
-package pl.dopierala.HibernateAssociations.Entity;
+package pl.dopierala.FetchTypes.Entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name="company")
@@ -17,6 +20,9 @@ public class Company {
     @OneToOne(targetEntity = CompanyDetail.class, cascade = {CascadeType.REMOVE,CascadeType.PERSIST})
     @JoinColumn(name="id_company_detail")
     private CompanyDetail details;
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "company", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<Property> properties;
+
 
     public Company() {
     }
@@ -58,13 +64,29 @@ public class Company {
         this.details = details;
     }
 
+    public List<Property> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(List<Property> properties) {
+        this.properties = properties;
+    }
+
+    public void addProperty(Property property){
+        if (Objects.isNull(this.properties)) {
+            this.properties = new ArrayList<>();
+        }
+
+        this.properties.add(property);
+        property.setCompany(this);
+    }
+
     @Override
     public String toString() {
         return "Company{" +
                 "id_company=" + id_company +
                 ", name='" + name + '\'' +
                 ", value=" + value +
-                ", details=" + details +
                 '}';
     }
 }

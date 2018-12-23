@@ -1,12 +1,12 @@
-package pl.dopierala.HibernateAssociations;
+package pl.dopierala.HibernateAssociations.OneToOne;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import pl.dopierala.HibernateAssociations.Entity.Company;
-import pl.dopierala.HibernateAssociations.Entity.CompanyDetail;
+import pl.dopierala.HibernateAssociations.OneToOne.Entity.Company;
+import pl.dopierala.HibernateAssociations.OneToOne.Entity.CompanyDetail;
 
-public class CascadeApp {
+public class CascadeRemoveApp {
     public static void main(String[] args) {
         //tworzenie obiektu configuration
         Configuration cfg = new Configuration();
@@ -23,12 +23,8 @@ public class CascadeApp {
         currentSession.beginTransaction();
         //odczytanie pracownika
         ////////////////////
-        Company company = new Company("Orlen",90000000);
-        CompanyDetail companyDetail = new CompanyDetail("Poland",550);
-        company.setDetails(companyDetail);
-
-        //currentSession.persist(companyDetail);
-        currentSession.persist(company);
+        Company companyToDelete = currentSession.get(Company.class, 12);
+        currentSession.remove(companyToDelete);
 
         ////////////////////
         //zakonczenie transakcji

@@ -1,13 +1,15 @@
-package pl.dopierala.HibernateAssociations;
+package pl.dopierala.HibernateAssociations.OneToMany;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import pl.dopierala.HibernateAssociations.Entity.Company;
-import pl.dopierala.HibernateAssociations.Entity.CompanyDetail;
+import pl.dopierala.HibernateAssociations.OneToMany.Entity.Company;
+import pl.dopierala.HibernateAssociations.OneToMany.Entity.CompanyDetail;
+import pl.dopierala.HibernateAssociations.OneToMany.Entity.Property;
 
-public class CascadeRemoveApp {
+import java.util.List;
+
+public class OneToManyDeleteApp {
     public static void main(String[] args) {
         //tworzenie obiektu configuration
         Configuration cfg = new Configuration();
@@ -16,6 +18,7 @@ public class CascadeRemoveApp {
         //wczytanie adnotacji
         cfg.addAnnotatedClass(Company.class);
         cfg.addAnnotatedClass(CompanyDetail.class);
+        cfg.addAnnotatedClass(Property.class);
         //stworzenie obiektu Session Factory
         SessionFactory sessionFactory = cfg.buildSessionFactory();
         //pobieranie sesji
@@ -24,8 +27,12 @@ public class CascadeRemoveApp {
         currentSession.beginTransaction();
         //odczytanie pracownika
         ////////////////////
-        Company companyToDelete = currentSession.get(Company.class, 12);
-        currentSession.remove(companyToDelete);
+        //get Orlen's properties
+
+        List<Property> orlensProperties= currentSession.createQuery("SELECT p FROM Company c JOIN Property p ON c.id_company=p.company  WHERE c.name='Orlen'",Property.class).getResultList();
+        Property orlenWarsawProperty = orlensProperties.stream().filter(p->p.getCity().equals("Warsaw")).findFirst().orElse(null);
+        currentSession.delete(orlenWarsawProperty);
+
 
         ////////////////////
         //zakonczenie transakcji
